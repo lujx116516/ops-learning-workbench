@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>运维学习工作台</title>
+<style>
+:root{--bg:#08101e;--side:#0d1729;--panel:#121f35;--panel2:#182842;--text:#eef4ff;--muted:#9fb0cc;--line:#2a3b5e;--green:#55d6aa;--blue:#80a7ff;--yellow:#ffd173;--red:#ff8494}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.6 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:240px 1fr}.sidebar{background:linear-gradient(180deg,#0c172a,#0a1220);border-right:1px solid var(--line);padding:22px 15px;position:sticky;top:0;height:100vh}.brand{font-size:21px;font-weight:800;margin:0 8px 4px}.brand span{color:var(--green)}.sub{font-size:12px;color:var(--muted);margin:0 8px 23px}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:var(--muted);text-align:left;padding:10px 11px;border-radius:9px}.nav button:hover,.nav button.active{background:var(--panel2);color:var(--text)}.nav button.active{box-shadow:inset 3px 0 var(--green)}.side-bottom{position:absolute;bottom:18px;left:15px;right:15px}.side-bottom button{width:100%;margin-top:8px}.main{padding:25px 30px 70px;max-width:1400px;width:100%;margin:auto}.topbar{display:flex;justify-content:space-between;gap:16px;align-items:start;margin-bottom:22px}.eyebrow{font-size:11px;color:var(--green);font-weight:800;letter-spacing:.14em}.title{font-size:32px;line-height:1.15;margin:8px 0}.lead{color:var(--muted);margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:8px 11px}.btn:hover{border-color:var(--green)}.btn.primary{background:var(--green);color:#061612;border-color:var(--green);font-weight:800}.btn.danger{color:#ffd8dd}.page{display:none}.page.active{display:block}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.card{background:linear-gradient(180deg,#14233b,#101b2d);border:1px solid var(--line);border-radius:14px;padding:16px}.card h3,.card h4{margin:0 0 7px}.stat{font-size:30px;color:var(--green);font-weight:800}.muted{color:var(--muted)}.section{margin:24px 0}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:12px}.section-head h2{margin:0;font-size:22px}.section-head p{margin:0;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.progress{height:9px;background:#263754;border-radius:99px;overflow:hidden;margin-top:10px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--blue));width:0}.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:#24415d;color:#bde3ff}.pill.green{background:#17493e;color:#9cf0d2}.pill.yellow{background:#4b3a1c;color:#ffde8f}.pill.red{background:#4f2530;color:#ffc2ca}.task{display:grid;grid-template-columns:22px 1fr auto;gap:9px;align-items:start;border-bottom:1px dashed #2b3b59;padding:10px 0}.task:last-child{border-bottom:0}.task input{width:17px;height:17px;margin-top:4px;accent-color:var(--green)}.task.done label{text-decoration:line-through;color:#71819d}.task small{color:var(--muted)}.task select{background:#0b1527;color:var(--text);border:1px solid var(--line);border-radius:7px;padding:4px}.note{width:100%;min-height:100px;background:#091322;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px;resize:vertical}.list{display:grid;gap:10px}.list-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}.list-item .row{display:flex;justify-content:space-between;gap:12px;align-items:start}.list-item h4{margin:0}.list-item p{margin:5px 0;color:var(--muted)}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.table{width:100%;border-collapse:collapse;min-width:720px}.table th,.table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}.table th{background:var(--panel2);color:var(--green)}.table td{color:var(--muted)}.filter{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;width:260px}.empty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal.show{display:flex}.modal-box{max-width:600px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:19px}.modal-box h3{margin-top:0}.modal-box input,.modal-box textarea,.modal-box select{width:100%;background:#0a1425;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:9px;margin:5px 0 12px}.modal-actions{display:flex;justify-content:flex-end;gap:8px}.kpi{display:flex;gap:12px;align-items:center}.kpi .icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#1a3d43;color:var(--green);font-weight:800}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.day{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:9px;min-height:90px}.day b{color:var(--green)}@media(max-width:980px){.app{grid-template-columns:190px 1fr}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:680px){.app{display:block}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.side-bottom{position:static;margin-top:15px}.main{padding:20px 14px 55px}.topbar{display:block}.actions{margin-top:15px}.cards,.grid{grid-template-columns:1fr}.calendar{grid-template-columns:1fr 1fr}.filter{width:100%}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="brand">运维<span>学习台</span></div><p class="sub">课程驱动 · 实验优先 · 持续复习</p>
+<div class="nav">
+<button data-page="home" class="active">⌂ 今日学习</button>
+<button data-page="route">▤ 学习路线</button>
+<button data-page="knowledge">◇ 知识库</button>
+<button data-page="experiments">⚙ 实验台账</button>
+<button data-page="issues">⚠ 问题与故障</button>
+<button data-page="review">↻ 复习中心</button>
+</div>
+<div class="side-bottom"><button class="btn primary" id="newBtn">＋ 新建记录</button><button class="btn" id="exportBtn">导出学习数据</button><button class="btn" id="importBtn">导入学习数据</button><input id="fileInput" type="file" accept=".json" hidden></div>
+</aside>
+<main class="main">
+<div class="topbar"><div><div class="eyebrow">PERSONAL OPS LEARNING WORKBENCH</div><h1 class="title">我的运维学习工作台</h1><p class="lead">基于你的 Python 全栈 + K8s 云原生课程笔记，先从 S1 Linux 第一周开始。</p></div><div class="actions"><span id="syncBox" class="pill">云端：未连接</span><button class="btn" id="authBtn">登录云端</button><button class="btn" id="todayBtn">回到今天</button><button class="btn" id="clearBtn">清空本机数据</button></div></div>
+
+<section id="home" class="page active">
+<div class="cards">
+<div class="card"><div class="muted">今日任务</div><div class="stat" id="todayStat">0 / 0</div><div class="progress"><i id="todayBar"></i></div></div>
+<div class="card"><div class="muted">知识点掌握</div><div class="stat" id="knowledgeStat">0%</div><div class="muted">按当前记录计算</div></div>
+<div class="card"><div class="muted">待处理问题</div><div class="stat" id="issueStat">0</div><div class="muted">未解决 / 待验证</div></div>
+<div class="card"><div class="muted">今日主题</div><div style="margin-top:6px;font-weight:700">Linux 工作模型与环境基线</div><div class="muted">S1 · 第一周 · 第一天</div></div>
+</div>
+<div class="section grid">
+<div class="card"><h3>今日学习目标</h3><div id="todayGoals"></div><textarea id="todayNote" class="note" placeholder="今天的整体学习记录、阻塞点或临时想法……"></textarea></div>
+<div class="card"><h3>今日工作流</h3><div class="list"><div class="list-item"><div class="row"><h4>1 · 理论诊断</h4><span class="pill">15 分钟</span></div><p>回忆 CPU、内存、磁盘、操作系统、Shell、启动流程。</p></div><div class="list-item"><div class="row"><h4>2 · 环境画像</h4><span class="pill green">30 分钟</span></div><p>确认系统、内核、架构、资源、Shell、网络和启动方式。</p></div><div class="list-item"><div class="row"><h4>3 · Shell 与路径</h4><span class="pill yellow">35 分钟</span></div><p>验证命令结构、PATH、绝对路径、相对路径和单根目录。</p></div><div class="list-item"><div class="row"><h4>4 · 综合验收</h4><span class="pill red">20 分钟</span></div><p>从零建立实验目录，创建并执行简单脚本，记录问题。</p></div></div></div>
+</div>
+<div class="section"><div class="section-head"><div><h2>今日任务清单</h2><p>先做，再回看课程。每项完成后更新掌握程度。</p></div></div><div class="card" id="todayTasks"></div></div>
+<div class="section grid"><div class="card"><h3>今日实验记录</h3><textarea id="todayExperiment" class="note" placeholder="实验目标、环境、操作、预期结果、实际结果、验证方式……"></textarea></div><div class="card"><h3>今日复盘</h3><textarea id="todayReview" class="note" placeholder="今天真正掌握了什么？哪里只是照着做？明天开始前要复习什么？"></textarea></div></div>
+</section>
+
+<section id="route" class="page"><div class="section-head"><div><h2>学习路线</h2><p>先按核心主线推进，暂缓内容不影响当前运维能力建设。</p></div></div><div class="table-wrap"><table class="table"><thead><tr><th>模块</th><th>规模</th><th>优先级</th><th>当前策略</th><th>状态</th></tr></thead><tbody id="routeTable"></tbody></table></div></section>
+
+<section id="knowledge" class="page"><div class="section-head"><div><h2>知识库</h2><p>知识点从课程笔记提炼成可解释、可操作、可排障的单元。</p></div><input class="filter" id="knowledgeFilter" placeholder="搜索知识点或模块"></div><div class="list" id="knowledgeList"></div></section>
+
+<section id="experiments" class="page"><div class="section-head"><div><h2>实验台账</h2><p>实验不记录“看过”，记录“能否独立重做和排障”。</p></div><button class="btn primary" id="addExperiment">＋ 添加实验</button></div><div class="list" id="experimentList"></div></section>
+
+<section id="issues" class="page"><div class="section-head"><div><h2>问题与故障</h2><p>统一记录概念、命令、权限、版本、网络和环境问题。</p></div><button class="btn primary" id="addIssue">＋ 添加问题</button></div><div class="list" id="issueList"></div></section>
+
+<section id="review" class="page"><div class="section-head"><div><h2>复习中心</h2><p>优先复习掌握度低、最近失败或还没有独立验证的内容。</p></div></div><div class="cards"><div class="card"><div class="muted">需要复习</div><div class="stat" id="reviewCount">0</div></div><div class="card"><div class="muted">能独立操作</div><div class="stat" id="operateCount">0%</div></div><div class="card"><div class="muted">能排障</div><div class="stat" id="debugCount">0%</div></div><div class="card"><div class="muted">已完成实验</div><div class="stat" id="expCount">0</div></div></div><div class="section list" id="reviewList"></div></section>
+</main></div>
+
+<div class="modal" id="modal"><div class="modal-box"><h3 id="modalTitle">新建记录</h3><div id="modalBody"></div><div class="modal-actions"><button class="btn" id="modalCancel">取消</button><button class="btn primary" id="modalSave">保存</button></div></div></div>
+<div class="modal" id="authModal"><div class="modal-box"><h3>连接云端学习数据</h3><p class="muted">公司电脑和家里电脑使用同一个账号即可同步。账号密码只在 Supabase 登录，不会发给我。</p><label>邮箱<input id="authEmail" type="email" autocomplete="email"></label><label>密码<input id="authPassword" type="password" autocomplete="current-password"></label><div class="modal-actions"><button class="btn" id="authCancel">取消</button><button class="btn" id="authSignUp">注册账号</button><button class="btn primary" id="authSignIn">登录</button></div><p id="authMessage" class="muted"></p></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const KEY='ops-learning-workbench-v1';
+const SUPABASE_URL='https://sgmyivccxlzdqjbrszdz.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_1xBCE2Gvw70Z2bj2rLHeEw_xPCEblAj';
+let cloudClient=null;let cloudSession=null;let cloudSaveTimer=null;
+const modules=[
+['S1 Linux 系统基础','2675 行','核心必修','先完成第一周诊断，再按实验补强','进行中'],
+['S2 Shell 编程','685 行','核心必修','与 Linux 实验绑定学习','未开始'],
+['S3 集群架构与 Web 服务','4904 行','核心必修','拆成网络、Nginx、请求链路','未开始'],
+['S4 MySQL','1608 行','运维补充','安装、权限、备份、恢复、慢查询','未开始'],
+['S5 Redis/Kafka/高并发','2695 行','运维补充','Redis 优先，Kafka 和高并发后置','未开始'],
+['S6 自动化运维 Ansible','316 行','核心必修','完整做一次批量部署项目','未开始'],
+['S7 容器技术 Docker','2665 行','核心必修','先快进建立框架，再按故障深入','已学部分'],
+['S8 Kubernetes 核心','6521 行','核心必修','分对象、网络、调度、存储、Helm 学习','已学部分'],
+['S9 监控与日志体系','2593 行','核心必修','PromQL、Grafana、日志形成闭环','未开始'],
+['S10 Operator 开发','22 行','后续进阶','先理解用途，暂不作为主线','暂缓'],
+['S12 Python 编程','798 行','运维补充','只学自动化所需部分','未开始'],
+['S13 前端基础','369 行','暂缓','当前运维主线暂不处理','暂缓'],
+['S14 Django 全栈','3409 行','暂缓','当前运维主线暂不处理','暂缓'],
+['S15 K8s 新版本专题','169 行','后续进阶','完成核心 K8s 后再结合版本学习','暂缓']
+];
+const knowledge=[
+['计算机运行模型','S1 day01','理解','CPU、内存、磁盘与程序加载执行'],
+['操作系统职责','S1 day02','理解','应用程序、系统调用、内核、硬件'],
+['用户态与内核态','S1 day02','听过','理解 Shell 命令如何进入内核'],
+['Linux 启动链路','S1 day03','听过','BIOS/UEFI、Bootloader、内核、init/systemd'],
+['bootfs 与 rootfs','S1 day06','听过','从文件维度理解 Linux 启动'],
+['Linux 单根目录','S1 day03/day07','理解','/etc、/var、/home、/proc、/sys 等目录用途'],
+['Shell 解释器','S1 day06','能操作','Bash 交互式环境与脚本'],
+['命令组成','S1 day06','能操作','命令、选项、参数'],
+['命令查找优先级','S1 day06','听过','路径、alias、函数、内置命令、hash、PATH'],
+['绝对路径与相对路径','S1 day06/day07','能操作','.、..、~ 与当前工作目录'],
+['PATH 环境变量','S1 day06','听过','Shell 如何定位外部命令'],
+['系统环境画像','S1 day03/day07','能操作','发行版、内核、架构、资源、IP、Shell'],
+['一切皆文件','S1 day07','听过','Linux 文件和设备抽象'],
+['Linux 发行版体系','S1 day02','理解','Red Hat 系列、Debian 系列、包管理器']
+];
+const todayTasks=[
+'不看笔记解释 CPU、内存、磁盘与程序运行过程',
+'不看笔记解释操作系统、Shell、系统调用和内核的关系',
+'完成当前 Linux 实验环境画像',
+'确认当前 Shell、命令提示符和用户身份',
+'观察 Linux 根目录并说明至少 8 个目录用途',
+'完成绝对路径、相对路径、.、..、~ 实验',
+'检查 PATH，判断一个命令从哪里被找到',
+'创建并执行一个简单 Shell 脚本',
+'建立 ops-lab 实验目录并记录目录结构',
+'写下今天仍未解决的 3 个问题'
+];
+let state=load()||{today:{checks:Array(todayTasks.length).fill(false),levels:Array(todayTasks.length).fill('听过'),note:'',experiment:'',review:''},knowledge:knowledge.map(x=>({name:x[0],module:x[1],level:x[2],summary:x[3],note:''})),experiments:[],issues:[]};
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch{return null}}
+function save(render=true){localStorage.setItem(KEY,JSON.stringify(state));if(render)paint();scheduleCloudSave()}
+function setSync(text,kind){const el=document.querySelector('#syncBox');el.textContent='云端：'+text;el.className='pill '+(kind||'')}
+function scheduleCloudSave(){if(!cloudSession||!cloudClient)return;clearTimeout(cloudSaveTimer);setSync('保存中…','yellow');cloudSaveTimer=setTimeout(async()=>{const {error}=await cloudClient.from('learning_workspace').upsert({id:cloudSession.user.id,workspace_data:state,updated_at:new Date().toISOString()});setSync(error?'保存失败':'已同步',error?'red':'green')},900)}
+async function loadCloud(){if(!cloudClient||!cloudSession)return;setSync('读取中…','yellow');const {data,error}=await cloudClient.from('learning_workspace').select('workspace_data,updated_at').eq('id',cloudSession.user.id).maybeSingle();if(error){setSync('读取失败','red');return}if(data&&data.workspace_data&&Object.keys(data.workspace_data).length){state=data.workspace_data;localStorage.setItem(KEY,JSON.stringify(state));paint();setSync('已同步','green')}else{await cloudClient.from('learning_workspace').insert({id:cloudSession.user.id,workspace_data:state});setSync('已同步','green')}}
+function openAuth(){document.querySelector('#authModal').classList.add('show');document.querySelector('#authMessage').textContent=''}
+async function initCloud(){if(!window.supabase){setSync('本地模式','yellow');return}cloudClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const result=await cloudClient.auth.getSession();cloudSession=result.data.session;if(cloudSession){document.querySelector('#authBtn').textContent='退出云端';await loadCloud()}else setSync('未登录','yellow');cloudClient.auth.onAuthStateChange(async(_event,s)=>{cloudSession=s;if(s){document.querySelector('#authModal').classList.remove('show');document.querySelector('#authBtn').textContent='退出云端';await loadCloud()}else{document.querySelector('#authBtn').textContent='登录云端';setSync('未登录','yellow')}})}
+function levelClass(v){return v==='能排障'?'red':v==='能操作'||v==='能讲解'?'green':v==='理解'?'yellow':''}
+function paint(){
+document.querySelector('#todayNote').value=state.today.note;document.querySelector('#todayExperiment').value=state.today.experiment;document.querySelector('#todayReview').value=state.today.review;
+const tc=document.querySelector('#todayTasks');tc.innerHTML=todayTasks.map((x,i)=>'<div class="task '+(state.today.checks[i]?'done':'')+'"><input type="checkbox" '+(state.today.checks[i]?'checked':'')+' data-ti="'+i+'"><label>'+x+'</label><select data-li="'+i+'">'+['未开始','听过','理解','能操作','能排障','能讲解'].map(v=>'<option '+(state.today.levels[i]===v?'selected':'')+'>'+v+'</option>').join('')+'</select></div>').join('');
+tc.querySelectorAll('[data-ti]').forEach(e=>e.onchange=()=>{state.today.checks[e.dataset.ti]=e.checked;save()});tc.querySelectorAll('[data-li]').forEach(e=>e.onchange=()=>{state.today.levels[e.dataset.li]=e.value;save()});
+const done=state.today.checks.filter(Boolean).length;document.querySelector('#todayStat').textContent=done+' / '+todayTasks.length;document.querySelector('#todayBar').style.width=(done/todayTasks.length*100)+'%';document.querySelector('#issueStat').textContent=state.issues.filter(x=>x.status!=='已解决').length;
+const avg=state.knowledge.reduce((a,x)=>a+['未开始','听过','理解','能操作','能排障','能讲解'].indexOf(x.level),0)/(state.knowledge.length*5);document.querySelector('#knowledgeStat').textContent=Math.round(avg*100)+'%';
+document.querySelector('#routeTable').innerHTML=modules.map(m=>'<tr><td><b>'+m[0]+'</b></td><td>'+m[1]+'</td><td><span class="pill '+(m[2]==='核心必修'?'green':'')+'">'+m[2]+'</span></td><td>'+m[3]+'</td><td>'+m[4]+'</td></tr>').join('');
+renderKnowledge();renderExperiments();renderIssues();renderReview();
+}
+function renderKnowledge(){const q=(document.querySelector('#knowledgeFilter')?.value||'').toLowerCase();const list=state.knowledge.filter(x=>(x.name+x.module+x.summary).toLowerCase().includes(q));document.querySelector('#knowledgeList').innerHTML=list.map((x,i)=>'<div class="list-item"><div class="row"><h4>'+x.name+'</h4><span class="pill '+levelClass(x.level)+'">'+x.level+'</span></div><p>'+x.module+' · '+x.summary+'</p><select data-ki="'+state.knowledge.indexOf(x)+'">'+['未开始','听过','理解','能操作','能排障','能讲解'].map(v=>'<option '+(x.level===v?'selected':'')+'>'+v+'</option>').join('')+'</select><textarea class="note" data-kn="'+state.knowledge.indexOf(x)+'" placeholder="记录自己的解释、实验或疑问……">'+(x.note||'')+'</textarea></div>').join('')||'<div class="empty">没有匹配的知识点。</div>';document.querySelectorAll('[data-ki]').forEach(e=>e.onchange=()=>{state.knowledge[e.dataset.ki].level=e.value;save()});document.querySelectorAll('[data-kn]').forEach(e=>e.oninput=()=>{state.knowledge[e.dataset.kn].note=e.value;save(false)})}
+function renderExperiments(){const el=document.querySelector('#experimentList');el.innerHTML=state.experiments.map((x,i)=>'<div class="list-item"><div class="row"><h4>'+x.name+'</h4><span class="pill '+(x.status==='已完成'?'green':'yellow')+'">'+x.status+'</span></div><p>'+x.goal+'</p><div class="muted">环境：'+x.env+' · 日期：'+x.date+'</div><p><b>结果：</b>'+x.result+'</p></div>').join('')||'<div class="empty">还没有实验记录。完成今天的实验后，点击“添加实验”。</div>';document.querySelector('#expCount').textContent=state.experiments.filter(x=>x.status==='已完成').length}
+function renderIssues(){const el=document.querySelector('#issueList');el.innerHTML=state.issues.map(x=>'<div class="list-item"><div class="row"><h4>'+x.title+'</h4><span class="pill '+(x.status==='已解决'?'green':'red')+'">'+x.status+'</span></div><p>'+x.symptom+'</p><div class="muted">类型：'+x.type+' · 模块：'+x.module+'</div><p><b>最终原因：</b>'+x.cause+'</p><p><b>下次如何判断：</b>'+x.next+'</p></div>').join('')||'<div class="empty">还没有问题记录。遇到卡点时，把现象和完整报错记录下来。</div>'}
+function renderReview(){const order=['未开始','听过','理解','能操作','能排障','能讲解'];const low=state.knowledge.filter(x=>order.indexOf(x.level)<3);document.querySelector('#reviewCount').textContent=low.length;document.querySelector('#operateCount').textContent=Math.round(state.knowledge.filter(x=>order.indexOf(x.level)>=3).length/state.knowledge.length*100)+'%';document.querySelector('#debugCount').textContent=Math.round(state.knowledge.filter(x=>order.indexOf(x.level)>=4).length/state.knowledge.length*100)+'%';document.querySelector('#reviewList').innerHTML=low.map(x=>'<div class="list-item"><div class="row"><h4>'+x.name+'</h4><span class="pill yellow">'+x.level+'</span></div><p>'+x.module+' · '+x.summary+'</p><p class="muted">复习任务：不看资料解释概念，并完成一次最小实验。</p></div>').join('')||'<div class="empty">当前没有低掌握度知识点。</div>'}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.querySelector('#'+b.dataset.page).classList.add('active')});
+document.querySelector('#todayBtn').onclick=()=>document.querySelector('.nav button[data-page="home"]').click();
+document.querySelector('#todayNote').oninput=e=>{state.today.note=e.target.value;save(false)};document.querySelector('#todayExperiment').oninput=e=>{state.today.experiment=e.target.value;save(false)};document.querySelector('#todayReview').oninput=e=>{state.today.review=e.target.value;save(false)};document.querySelector('#knowledgeFilter').oninput=renderKnowledge;
+function modal(title,html,fn){document.querySelector('#modalTitle').textContent=title;document.querySelector('#modalBody').innerHTML=html;document.querySelector('#modal').classList.add('show');document.querySelector('#modalSave').onclick=()=>{fn();document.querySelector('#modal').classList.remove('show');save()}}
+document.querySelector('#modalCancel').onclick=()=>document.querySelector('#modal').classList.remove('show');
+document.querySelector('#addExperiment').onclick=()=>modal('添加实验','<label>实验名称<input id="m1"></label><label>目标<input id="m2"></label><label>环境<input id="m3" value="Ubuntu Linux 虚拟机"></label><label>状态<select id="m4"><option>进行中</option><option>已完成</option><option>失败待复盘</option></select></label><label>结果<textarea id="m5"></textarea></label>',()=>state.experiments.unshift({name:m1.value,goal:m2.value,env:m3.value,status:m4.value,result:m5.value,date:new Date().toLocaleDateString()}));
+document.querySelector('#addIssue').onclick=()=>modal('添加问题','<label>问题标题<input id="m1"></label><label>类型<input id="m2" placeholder="概念 / 命令 / 权限 / 版本 / 网络 / 环境"></label><label>模块<input id="m3" value="S1 Linux"></label><label>现象<textarea id="m4"></textarea></label><label>最终原因<textarea id="m5"></textarea></label><label>下次如何判断<textarea id="m6"></textarea></label><label>状态<select id="m7"><option>待处理</option><option>排查中</option><option>已解决</option><option>待验证</option></select></label>',()=>state.issues.unshift({title:m1.value,type:m2.value,module:m3.value,symptom:m4.value,cause:m5.value,next:m6.value,status:m7.value}));
+document.querySelector('#exportBtn').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));a.download='ops-learning-workbench-data.json';a.click();URL.revokeObjectURL(a.href)};
+document.querySelector('#importBtn').onclick=()=>document.querySelector('#fileInput').click();document.querySelector('#fileInput').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();alert('学习数据导入成功')}catch{alert('JSON 文件格式不正确')}};r.readAsText(f)};
+document.querySelector('#clearBtn').onclick=()=>{if(confirm('清空本机保存的全部工作台数据？')){localStorage.removeItem(KEY);location.reload()}};
+document.querySelector('#newBtn').onclick=()=>document.querySelector('#addExperiment').click();
+document.querySelector('#authBtn').onclick=async()=>{if(cloudSession){await cloudClient.auth.signOut()}else openAuth()};document.querySelector('#authCancel').onclick=()=>document.querySelector('#authModal').classList.remove('show');document.querySelector('#authSignIn').onclick=async()=>{const {error}=await cloudClient.auth.signInWithPassword({email:document.querySelector('#authEmail').value,password:document.querySelector('#authPassword').value});document.querySelector('#authMessage').textContent=error?error.message:'登录中…'};document.querySelector('#authSignUp').onclick=async()=>{const {error}=await cloudClient.auth.signUp({email:document.querySelector('#authEmail').value,password:document.querySelector('#authPassword').value});document.querySelector('#authMessage').textContent=error?error.message:'注册请求已提交，请检查邮箱确认链接。'};
+paint();initCloud();
+</script>
+</body>
+</html>
