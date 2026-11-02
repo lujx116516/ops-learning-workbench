@@ -27,6 +27,7 @@
 <div class="topbar"><div><div class="eyebrow">PERSONAL OPS LEARNING WORKBENCH</div><h1 class="title">我的运维学习工作台</h1><p class="lead">基于你的 Python 全栈 + K8s 云原生课程笔记，先从 S1 Linux 第一周开始。</p></div><div class="actions"><span id="syncBox" class="pill">云端：未连接</span><button class="btn" id="authBtn">登录云端</button><button class="btn" id="todayBtn">回到今天</button><button class="btn" id="clearBtn">清空本机数据</button></div></div>
 
 <section id="home" class="page active">
+<div class="section day-switcher"><div class="section-head"><div><h2>当前学习日</h2><p>按课程日推进；今天时间多时可直接切换下一天。</p></div><select id="daySelector" class="filter"></select></div><div id="dayMeta" class="card"></div></div>
 <div class="cards">
 <div class="card"><div class="muted">今日任务</div><div class="stat" id="todayStat">0 / 0</div><div class="progress"><i id="todayBar"></i></div></div>
 <div class="card"><div class="muted">知识点掌握</div><div class="stat" id="knowledgeStat">0%</div><div class="muted">按当前记录计算</div></div>
@@ -37,7 +38,8 @@
 <div class="card"><h3>今日学习目标</h3><div id="todayGoals"></div><textarea id="todayNote" class="note" placeholder="今天的整体学习记录、阻塞点或临时想法……"></textarea></div>
 <div class="card"><h3>今日工作流</h3><div class="list"><div class="list-item"><div class="row"><h4>1 · 理论诊断</h4><span class="pill">15 分钟</span></div><p>回忆 CPU、内存、磁盘、操作系统、Shell、启动流程。</p></div><div class="list-item"><div class="row"><h4>2 · 环境画像</h4><span class="pill green">30 分钟</span></div><p>确认系统、内核、架构、资源、Shell、网络和启动方式。</p></div><div class="list-item"><div class="row"><h4>3 · Shell 与路径</h4><span class="pill yellow">35 分钟</span></div><p>验证命令结构、PATH、绝对路径、相对路径和单根目录。</p></div><div class="list-item"><div class="row"><h4>4 · 综合验收</h4><span class="pill red">20 分钟</span></div><p>从零建立实验目录，创建并执行简单脚本，记录问题。</p></div></div></div>
 </div>
-<div class="section"><div class="section-head"><div><h2>今日任务清单</h2><p>先做，再回看课程。每项完成后更新掌握程度。</p></div></div><div class="card" id="todayTasks"></div></div>
+<div class="section"><div class="section-head"><div><h2 id="taskTitle">当日任务清单</h2><p>先尝试口述或实验，再回看课程；每项都要完成事实验证。</p></div></div><div class="card" id="todayTasks"></div></div>
+<div class="section grid"><div class="card"><h3>当日知识点总表</h3><p class="muted">用它查漏补缺。每个知识点都对应课程章节、口述问题和验证方式。</p><div class="list" id="dayKnowledge"></div></div><div class="card"><h3>当日诊断结论</h3><textarea id="dayDiagnosis" class="note" placeholder="今天真正会的、只是听过的、仍然不会的……"></textarea></div></div>
 <div class="section grid"><div class="card"><h3>今日实验记录</h3><textarea id="todayExperiment" class="note" placeholder="实验目标、环境、操作、预期结果、实际结果、验证方式……"></textarea></div><div class="card"><h3>今日复盘</h3><textarea id="todayReview" class="note" placeholder="今天真正掌握了什么？哪里只是照着做？明天开始前要复习什么？"></textarea></div></div>
 </section>
 
@@ -76,7 +78,7 @@ const modules=[
 ['S14 Django 全栈','3409 行','暂缓','当前运维主线暂不处理','暂缓'],
 ['S15 K8s 新版本专题','169 行','后续进阶','完成核心 K8s 后再结合版本学习','暂缓']
 ];
-const knowledge=[
+const knowledgeSeed=[
 ['计算机运行模型','S1 day01','理解','CPU、内存、磁盘与程序加载执行'],
 ['操作系统职责','S1 day02','理解','应用程序、系统调用、内核、硬件'],
 ['用户态与内核态','S1 day02','听过','理解 Shell 命令如何进入内核'],
@@ -92,7 +94,7 @@ const knowledge=[
 ['一切皆文件','S1 day07','听过','Linux 文件和设备抽象'],
 ['Linux 发行版体系','S1 day02','理解','Red Hat 系列、Debian 系列、包管理器']
 ];
-const todayTasks=[
+let todayTasks=[
 '不看笔记解释 CPU、内存、磁盘与程序运行过程',
 '不看笔记解释操作系统、Shell、系统调用和内核的关系',
 '完成当前 Linux 实验环境画像',
@@ -104,7 +106,22 @@ const todayTasks=[
 '建立 ops-lab 实验目录并记录目录结构',
 '写下今天仍未解决的 3 个问题'
 ];
-let state=load()||{today:{checks:Array(todayTasks.length).fill(false),levels:Array(todayTasks.length).fill('听过'),note:'',experiment:'',review:''},knowledge:knowledge.map(x=>({name:x[0],module:x[1],level:x[2],summary:x[3],note:''})),experiments:[],issues:[]};
+const courseDays={
+day01:{title:'第 1 天：计算机组成原理与操作系统',source:'S1 day01-day03',summary:'程序、操作系统、用户态/内核态与启动链路。',tasks:todayTasks,knowledge:knowledgeSeed},
+day02:{title:'第 2 天：Linux 安装、启动与目录结构',source:'S1 day03 + day07',summary:'BIOS/UEFI、Bootloader、内核、init/systemd、rootfs 与单根目录。',tasks:['画出 BIOS/UEFI → Bootloader → Kernel → init/systemd 启动链路','确认发行版、内核、架构与启动目标','观察 /、/boot、/etc、/var、/home、/proc、/sys、/dev 用途','解释 bootfs 与 rootfs 的区别','记录一次启动或服务状态检查结果'],knowledge:[['Linux 启动链路','S1 day03：操作系统启动流程','未开始','能说明启动各阶段先后关系'],['bootfs 与 rootfs','S1 day06：系统构成与 shell 核心','未开始','能从文件角度解释启动前后两类文件'],['Linux 单根目录','S1 day03/day07：目录结构与文件管理基础','未开始','能说明至少 10 个核心目录用途'],['进程 1 与服务管理','S1 day06：系统启动顺序','未开始','能说明 PID 1、systemd 与服务状态的关系']]},
+day03:{title:'第 3 天：Shell、命令与路径',source:'S1 day06-day07',summary:'Bash、命令结构、PATH、绝对/相对路径和文件操作。',tasks:['确认当前 Shell、命令提示符和用户身份','拆解 5 条命令的命令名、选项和参数','检查 PATH 并定位一个命令来源','完成绝对路径、相对路径、.、..、~ 实验','创建 ops-lab 目录并完成文件操作'],knowledge:[['Shell 解释器','S1 day06：shell 解释器介绍','未开始','能解释 Bash 如何接收命令并调用系统'],['命令组成','S1 day06：shell 交互式环境','未开始','能区分命令、选项、参数和重定向'],['命令查找优先级','S1 day06：命令查找与 PATH','未开始','能用 type/which/command 判断命令来源'],['绝对路径与相对路径','S1 day07：文件管理基础','未开始','能独立完成路径切换和路径推导'],['基础文件操作','S1 day07：文件管理基础','未开始','能创建、复制、移动、删除并解释结果']]},
+day04:{title:'第 4 天：网络基础',source:'S1 day04',summary:'IP、MAC、端口、协议、DNS 与连通性诊断。',tasks:['画出 IP、MAC、端口、协议四者关系','查看本机 IP、路由、DNS 和监听端口','使用 ping、ss、ip、nslookup/dig 完成一次诊断','解释 TCP/UDP 与端口的作用','记录一次网络故障的现象、判断和证据'],knowledge:[['IP 与 MAC','S1 day04：网络基础','未开始','能说明二层 MAC 与三层 IP 的区别'],['端口与进程','S1 day04：网络基础','未开始','能把监听端口定位到进程'],['DNS 解析','S1 day04：网络基础','未开始','能解释域名到 IP 的解析路径'],['基础网络诊断','S1 day04：网络基础','未开始','能按现象选择诊断工具']]},
+day05:{title:'第 5 天：网络进阶与服务访问链路',source:'S1 day05',summary:'路由、服务访问链路和分层排障。',tasks:['查看默认路由并解释下一跳','区分本机、局域网和公网访问路径','完成一次 TCP 服务连通性检查','记录 DNS 正常但服务不可访问的判断路径','整理网络故障分层排查表'],knowledge:[['路由与下一跳','S1 day05：网络进阶','未开始','能从路由表判断数据包下一跳'],['服务访问链路','S1 day05：网络进阶','未开始','能描述客户端到服务端的完整链路'],['分层排障','S1 day05：网络进阶','未开始','能区分 DNS、网络、端口、应用层问题']]},
+day06:{title:'第 6 天：文件管理基础与权限',source:'S1 day07-day08',summary:'文件属性、权限、用户组、链接和查找。',tasks:['查看文件类型、权限、属主、属组和时间信息','完成 chmod、chown、umask 最小实验','解释软链接与硬链接区别','使用 find/grep 完成一次定位','记录一次权限拒绝并完成排障'],knowledge:[['文件属性','S1 day07：文件管理基础','未开始','能读懂 ls -l 输出'],['权限模型','S1 day07/day08：权限管理','未开始','能解释 rwx、用户/组/其他人和数字权限'],['软链接与硬链接','S1 day08：文件管理高级','未开始','能通过实验说明两者差异'],['find 与 grep','S1 day07/day08：查找与内容过滤','未开始','能组合命令定位文件和内容']]},
+day07:{title:'第 7 天：文件管理高级与周验收',source:'S1 day08-day09',summary:'综合验证文件、权限、Shell 和环境诊断能力。',tasks:['从零搭建 ops-lab 周验收目录','完成文件、权限、链接和查找综合实验','创建并执行一个带参数的 Shell 脚本','模拟权限或路径故障并记录排障过程','不看笔记讲完整 Linux 第一周知识图谱'],knowledge:[['文件管理综合能力','S1 day08-day09：文件管理高级','未开始','能独立完成文件管理综合任务'],['Shell 脚本最小闭环','S1 day06：shell 脚本','未开始','能创建、赋权、执行并解释脚本'],['故障证据链','S1 day07-day09：文件与权限排障','未开始','能记录现象、假设、证据和结论'],['第一周知识图谱','S1 day01-day09','未开始','能把硬件、OS、Shell、文件、网络串成一条链']]}
+};
+let activeDay='day01';
+function dayItems(d){return d.knowledge.map(x=>({name:x[0],module:x[1],level:x[2],summary:x[3],note:'',oral:'',verification:'未验证',evidence:''}))}
+function blankDay(d){return {checks:Array(d.tasks.length).fill(false),levels:Array(d.tasks.length).fill('未开始'),note:'',experiment:'',review:'',diagnosis:'',taskEvidence:Array(d.tasks.length).fill(''),taskVerification:Array(d.tasks.length).fill('未验证')}}
+let state=load()||{activeDay:'day01',days:{},today:null,knowledge:dayItems(courseDays.day01),experiments:[],issues:[]};
+function migrateState(){const legacyKnowledge=state.knowledge;state.days=state.days||{};if(state.today&&!state.days.day01)state.days.day01=state.today;Object.keys(courseDays).forEach(id=>{const d=courseDays[id];state.days[id]=Object.assign(blankDay(d),state.days[id]||{});state.days[id].checks=Array.from({length:d.tasks.length},(_,i)=>!!(state.days[id].checks||[])[i]);state.days[id].levels=Array.from({length:d.tasks.length},(_,i)=>(state.days[id].levels||[])[i]||'未开始');state.days[id].taskEvidence=Array.from({length:d.tasks.length},(_,i)=>(state.days[id].taskEvidence||[])[i]||'');state.days[id].taskVerification=Array.from({length:d.tasks.length},(_,i)=>(state.days[id].taskVerification||[])[i]||'未验证')});activeDay=state.activeDay||'day01';if(!courseDays[activeDay])activeDay='day01';state.today=state.days[activeDay];state.knowledgeByDay=state.knowledgeByDay||{};if(!state.knowledgeByDay.day01&&legacyKnowledge)state.knowledgeByDay.day01=legacyKnowledge;state.knowledge=state.knowledgeByDay[activeDay]||dayItems(courseDays[activeDay]);state.knowledgeByDay[activeDay]=state.knowledge}
+migrateState();
+let knowledge=state.knowledge;todayTasks=courseDays[activeDay].tasks;
 function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch{return null}}
 function save(render=true){localStorage.setItem(KEY,JSON.stringify(state));if(render)paint();scheduleCloudSave()}
 function setSync(text,kind){const el=document.querySelector('#syncBox');el.textContent='云端：'+text;el.className='pill '+(kind||'')}
@@ -114,11 +131,13 @@ function openAuth(){document.querySelector('#authModal').classList.add('show');d
 async function initCloud(){if(!window.supabase){setSync('本地模式','yellow');return}cloudClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const result=await cloudClient.auth.getSession();cloudSession=result.data.session;if(cloudSession){document.querySelector('#authBtn').textContent='退出云端';await loadCloud()}else setSync('未登录','yellow');cloudClient.auth.onAuthStateChange(async(_event,s)=>{cloudSession=s;if(s){document.querySelector('#authModal').classList.remove('show');document.querySelector('#authBtn').textContent='退出云端';await loadCloud()}else{document.querySelector('#authBtn').textContent='登录云端';setSync('未登录','yellow')}})}
 function levelClass(v){return v==='能排障'?'red':v==='能操作'||v==='能讲解'?'green':v==='理解'?'yellow':''}
 function paint(){
-document.querySelector('#todayNote').value=state.today.note;document.querySelector('#todayExperiment').value=state.today.experiment;document.querySelector('#todayReview').value=state.today.review;
-const tc=document.querySelector('#todayTasks');tc.innerHTML=todayTasks.map((x,i)=>'<div class="task '+(state.today.checks[i]?'done':'')+'"><input type="checkbox" '+(state.today.checks[i]?'checked':'')+' data-ti="'+i+'"><label>'+x+'</label><select data-li="'+i+'">'+['未开始','听过','理解','能操作','能排障','能讲解'].map(v=>'<option '+(state.today.levels[i]===v?'selected':'')+'>'+v+'</option>').join('')+'</select></div>').join('');
-tc.querySelectorAll('[data-ti]').forEach(e=>e.onchange=()=>{state.today.checks[e.dataset.ti]=e.checked;save()});tc.querySelectorAll('[data-li]').forEach(e=>e.onchange=()=>{state.today.levels[e.dataset.li]=e.value;save()});
+document.querySelector('#todayNote').value=state.today.note;document.querySelector('#todayExperiment').value=state.today.experiment;document.querySelector('#todayReview').value=state.today.review;document.querySelector('#dayDiagnosis').value=state.today.diagnosis||'';document.querySelector('#taskTitle').textContent=courseDays[activeDay].title+' · 任务清单';
+const ds=document.querySelector('#daySelector');ds.innerHTML=Object.entries(courseDays).map(([id,d])=>'<option value="'+id+'" '+(id===activeDay?'selected':'')+'>'+d.title+'</option>').join('');document.querySelector('#dayMeta').innerHTML='<b>'+courseDays[activeDay].source+'</b><p class="muted">'+courseDays[activeDay].summary+'</p><span class="pill">'+courseDays[activeDay].knowledge.length+' 个知识点 · '+todayTasks.length+' 个任务</span>';
+const tc=document.querySelector('#todayTasks');tc.innerHTML=todayTasks.map((x,i)=>'<div class="task '+(state.today.checks[i]?'done':'')+'"><input type="checkbox" '+(state.today.checks[i]?'checked':'')+' data-ti="'+i+'"><div><label>'+x+'</label><small>补课入口：'+courseDays[activeDay].source+' · 验收：完成操作并留下命令/结果证据</small><div><button class="btn verify-btn" data-verify="'+i+'">口述/实验验证</button> <span class="pill '+(state.today.taskVerification[i]==='已验证'?'green':'yellow')+'">'+state.today.taskVerification[i]+'</span></div></div><select data-li="'+i+'">'+['未开始','听过','理解','能操作','能排障','能讲解'].map(v=>'<option '+(state.today.levels[i]===v?'selected':'')+'>'+v+'</option>').join('')+'</select></div>').join('');
+tc.querySelectorAll('[data-ti]').forEach(e=>e.onchange=()=>{state.today.checks[e.dataset.ti]=e.checked;save()});tc.querySelectorAll('[data-li]').forEach(e=>e.onchange=()=>{state.today.levels[e.dataset.li]=e.value;save()});tc.querySelectorAll('[data-verify]').forEach(e=>e.onclick=()=>{const i=+e.dataset.verify;modal('验证：'+todayTasks[i],'<p class="muted">先不看笔记口述或执行实验，再记录证据。标准是能说清原因、做出操作、解释结果。</p><label>我的口述/实验记录<textarea id="vEvidence" class="note">'+(state.today.taskEvidence[i]||'')+'</textarea></label><label>验证结论<select id="vResult"><option>未验证</option><option>部分正确</option><option>已验证</option></select></label>',()=>{state.today.taskEvidence[i]=document.querySelector('#vEvidence').value;state.today.taskVerification[i]=document.querySelector('#vResult').value})});
 const done=state.today.checks.filter(Boolean).length;document.querySelector('#todayStat').textContent=done+' / '+todayTasks.length;document.querySelector('#todayBar').style.width=(done/todayTasks.length*100)+'%';document.querySelector('#issueStat').textContent=state.issues.filter(x=>x.status!=='已解决').length;
 const avg=state.knowledge.reduce((a,x)=>a+['未开始','听过','理解','能操作','能排障','能讲解'].indexOf(x.level),0)/(state.knowledge.length*5);document.querySelector('#knowledgeStat').textContent=Math.round(avg*100)+'%';
+document.querySelector('#dayKnowledge').innerHTML=state.knowledge.map((x,i)=>'<div class="list-item"><div class="row"><b>'+(i+1)+' · '+x.name+'</b><span class="pill '+levelClass(x.level)+'">'+x.level+'</span></div><p>'+x.summary+'</p><small>课程位置：'+x.module+'</small><p class="muted">口述问题：不看笔记解释；验证：给出命令、现象或结果证据。</p></div>').join('');
 document.querySelector('#routeTable').innerHTML=modules.map(m=>'<tr><td><b>'+m[0]+'</b></td><td>'+m[1]+'</td><td><span class="pill '+(m[2]==='核心必修'?'green':'')+'">'+m[2]+'</span></td><td>'+m[3]+'</td><td>'+m[4]+'</td></tr>').join('');
 renderKnowledge();renderExperiments();renderIssues();renderReview();
 }
@@ -128,7 +147,8 @@ function renderIssues(){const el=document.querySelector('#issueList');el.innerHT
 function renderReview(){const order=['未开始','听过','理解','能操作','能排障','能讲解'];const low=state.knowledge.filter(x=>order.indexOf(x.level)<3);document.querySelector('#reviewCount').textContent=low.length;document.querySelector('#operateCount').textContent=Math.round(state.knowledge.filter(x=>order.indexOf(x.level)>=3).length/state.knowledge.length*100)+'%';document.querySelector('#debugCount').textContent=Math.round(state.knowledge.filter(x=>order.indexOf(x.level)>=4).length/state.knowledge.length*100)+'%';document.querySelector('#reviewList').innerHTML=low.map(x=>'<div class="list-item"><div class="row"><h4>'+x.name+'</h4><span class="pill yellow">'+x.level+'</span></div><p>'+x.module+' · '+x.summary+'</p><p class="muted">复习任务：不看资料解释概念，并完成一次最小实验。</p></div>').join('')||'<div class="empty">当前没有低掌握度知识点。</div>'}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.querySelector('#'+b.dataset.page).classList.add('active')});
 document.querySelector('#todayBtn').onclick=()=>document.querySelector('.nav button[data-page="home"]').click();
-document.querySelector('#todayNote').oninput=e=>{state.today.note=e.target.value;save(false)};document.querySelector('#todayExperiment').oninput=e=>{state.today.experiment=e.target.value;save(false)};document.querySelector('#todayReview').oninput=e=>{state.today.review=e.target.value;save(false)};document.querySelector('#knowledgeFilter').oninput=renderKnowledge;
+document.querySelector('#daySelector').onchange=e=>{state.knowledgeByDay[activeDay]=state.knowledge;state.days[activeDay]=state.today;activeDay=e.target.value;state.activeDay=activeDay;todayTasks=courseDays[activeDay].tasks;state.today=state.days[activeDay];state.knowledge=state.knowledgeByDay[activeDay]||dayItems(courseDays[activeDay]);state.knowledgeByDay[activeDay]=state.knowledge;save()};
+document.querySelector('#todayNote').oninput=e=>{state.today.note=e.target.value;save(false)};document.querySelector('#todayExperiment').oninput=e=>{state.today.experiment=e.target.value;save(false)};document.querySelector('#todayReview').oninput=e=>{state.today.review=e.target.value;save(false)};document.querySelector('#dayDiagnosis').oninput=e=>{state.today.diagnosis=e.target.value;save(false)};document.querySelector('#knowledgeFilter').oninput=renderKnowledge;
 function modal(title,html,fn){document.querySelector('#modalTitle').textContent=title;document.querySelector('#modalBody').innerHTML=html;document.querySelector('#modal').classList.add('show');document.querySelector('#modalSave').onclick=()=>{fn();document.querySelector('#modal').classList.remove('show');save()}}
 document.querySelector('#modalCancel').onclick=()=>document.querySelector('#modal').classList.remove('show');
 document.querySelector('#addExperiment').onclick=()=>modal('添加实验','<label>实验名称<input id="m1"></label><label>目标<input id="m2"></label><label>环境<input id="m3" value="Ubuntu Linux 虚拟机"></label><label>状态<select id="m4"><option>进行中</option><option>已完成</option><option>失败待复盘</option></select></label><label>结果<textarea id="m5"></textarea></label>',()=>state.experiments.unshift({name:m1.value,goal:m2.value,env:m3.value,status:m4.value,result:m5.value,date:new Date().toLocaleDateString()}));
